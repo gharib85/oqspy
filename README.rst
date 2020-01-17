@@ -18,14 +18,23 @@ oqspy
         :target: https://oqspy.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/GillianGrayson/oqspy/shield.svg
-     :target: https://pyup.io/repos/github/GillianGrayson/oqspy/
-     :alt: Updates
+.. image:: https://codecov.io/gh/GillianGrayson/oqspy/branch/master/graph/badge.svg
+        :target: https://codecov.io/gh/GillianGrayson/oqspy
 
+.. image:: https://img.shields.io/lgtm/alerts/g/GillianGrayson/oqspy.svg?logo=lgtm&logoWidth=18
+        :target: https://lgtm.com/projects/g/GillianGrayson/oqspy/alerts/
+        :alt: Total alerts
+
+.. image:: https://img.shields.io/lgtm/grade/python/g/GillianGrayson/oqspy.svg?logo=lgtm&logoWidth=18
+        :target: https://lgtm.com/projects/g/GillianGrayson/oqspy/context:python
+        :alt: Language grade: Python
+
+.. image:: https://pyup.io/repos/github/GillianGrayson/oqspy/shield.svg
+        :target: https://pyup.io/repos/github/GillianGrayson/oqspy/
+        :alt: Updates
 
 
 Open Quantum Systems Modelling Package
-
 
 * Free software: MIT license
 * Documentation: https://oqspy.readthedocs.io.
