@@ -1,0 +1,38 @@
+matrix:
+  fast_finish: true     # immediately finish build once one of the jobs fails.
+
+environment:
+
+  matrix:
+    - TOXENV: 'py37'
+      MINICONDA: "C:\\Miniconda37-x64"
+      PLATFORM: x64
+      PYTHON_VERSION: "3.7"
+      
+    - TOXENV: 'py37'
+      MINICONDA: "C:\\Miniconda37-x64"
+      PLATFORM: x64
+      PYTHON_VERSION: "3.7"
+
+# all our python builds have to happen in tests_script...
+build: false
+
+init:
+  - "ECHO %PYTHON_VERSION% %MINICONDA%"
+
+install:
+    # set up environment
+    - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%MINICONDA%\\Library\\bin;%PATH%"
+    - conda config --set always_yes yes
+    - conda update -q conda
+    - conda create -n test-env python=%PYTHON_VERSION%
+    - activate test-env
+    - conda install -c anaconda msvc_runtime
+    - python.exe -m pip install --upgrade pip
+    - python.exe -m pip install -U flake8
+    - python.exe -m pip install -r requirements_dev.txt"
+
+test_script:
+    - python.exe -m flake8 oqspy
+    - python.exe -m flake8 tests
+    - python.exe setup.py test

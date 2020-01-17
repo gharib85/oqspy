@@ -6,7 +6,6 @@
 import unittest
 from click.testing import CliRunner
 
-from oqspy import oqspy
 from oqspy import cli
 
 
