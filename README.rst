@@ -8,11 +8,15 @@ oqspy
 
 .. image:: https://img.shields.io/travis/GillianGrayson/oqspy.svg
         :target: https://travis-ci.org/GillianGrayson/oqspy
+        :alt: Travis build status
+
+.. image:: https://ci.appveyor.com/api/projects/status/5aw9wl4adxw17nbx/branch/master?svg=true
+        :target: https://ci.appveyor.com/project/GillianGrayson/oqspy
+        :alt: Appveyor build status
 
 .. image:: https://readthedocs.org/projects/oqspy/badge/?version=latest
         :target: https://oqspy.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
-
 
 .. image:: https://pyup.io/repos/github/GillianGrayson/oqspy/shield.svg
      :target: https://pyup.io/repos/github/GillianGrayson/oqspy/
