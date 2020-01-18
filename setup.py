@@ -10,13 +10,16 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
-'Click>=7.0',
-]
+with open('requirements_dev.txt', 'r') as f:
+    requirements = list(f)
 
 setup_requirements = [ ]
 
 test_requirements = [ ]
+
+packages = find_packages(include=['oqspy'])
+packages.extend('oqspy.' + item for item in find_packages(where='oqspy'))
+
 
 setup(
     author="Igor Yusipov",
