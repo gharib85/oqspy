@@ -34,7 +34,7 @@ class DimerModel:
             self.drv_freq = 0.0
 
     def get_path(self):
-        path = f'{ROOT_DIR}\\fixtures\\models\\dimer\\'
+        path = f'{ROOT_DIR}/fixtures/models/dimer/'
         return path
 
     def get_suffix(self):
