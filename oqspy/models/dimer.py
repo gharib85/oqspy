@@ -82,3 +82,31 @@ def dimer_get_driving_functions(type, ampl, freq, phas):
             drv = ampl * np.sin(freq * time + phas)
             return drv
     return [driving]
+
+
+def dimer_get_dissipators(num_particles):
+    sys_size = dimer_get_sys_size(num_particles)
+
+    rows = []
+    cols = []
+    vals = []
+
+    for st_id in range(0, sys_size):
+        rows.append(st_id)
+        cols.append(st_id)
+        val = float(st_id - (sys_size - (st_id + 1)))
+        vals.append(val)
+
+    for st_id in range(0, sys_size - 1):
+        rows.append(st_id + 1)
+        cols.append(st_id)
+        val = -np.sqrt(float((sys_size - (st_id + 1)) * (st_id + 1)))
+        vals.append(val)
+
+        rows.append(st_id)
+        cols.append(st_id + 1)
+        val = np.sqrt(float((st_id + 1) * (sys_size - (st_id + 1))))
+        vals.append(val)
+
+    dissipators = [csr_matrix((vals, (rows, cols)), shape=(sys_size, sys_size))]
+    return dissipators
