@@ -1,4 +1,5 @@
 from scipy.sparse import csr_matrix
+from scipy import sparse
 import types
 from inspect import signature
 import numpy as np
@@ -47,6 +48,8 @@ class oqs:
         self.__driving_functions = None
         self.__dissipators = None
         self.__gammas = None
+
+        self.__lindbladian = None
 
     def init_hamiltonian(self, hamiltonian):
         """
@@ -147,5 +150,26 @@ class oqs:
         self.__dissipators = dissipators
         self.__gammas = gammas
 
-    def __init_lindbladian(self):
-        pass
+    def __calc_lindbladian(self):
+
+        if self.__hamiltonian is None:
+            raise ValueError('hamiltonian is not initialized.')
+        if self.__dissipators is None:
+            raise ValueError('dissipators are not initialized.')
+        if self.__gammas is None:
+            raise ValueError('gammas are not initialized.')
+
+        eye = sparse.eye(self.__sys_size, self.__sys_size, dtype=np.complex, format='csr')
+
+        self.__lindbladian = -1.0j * (
+            sparse.kron(eye, self.__hamiltonian) - sparse.kron(self.__hamiltonian.transpose(copy=True), eye)
+        )
+
+        for diss_id, diss in enumerate(self.__dissipators):
+            tmp_1 = diss.getH().transpose(copy=True)
+            tmp_2 = diss.getH() * diss
+            tmp_3 = tmp_2.transpose(copy=True)
+
+            self.__lindbladian += 0.5 * self.__gammas[diss_id] * (
+                2.0 * sparse.kron(eye, diss) * sparse.kron(tmp_1, eye) - sparse.kron(tmp_3, eye) - sparse.kron(eye, tmp_2)
+            )
