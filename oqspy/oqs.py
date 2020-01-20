@@ -44,6 +44,7 @@ class oqs:
         self.__hamiltonian = None
         self.__driving_hamiltonians = None
         self.__driving_functions = None
+        self.__dissipators = None
 
     def init_hamiltonian(self, hamiltonian):
         """
@@ -103,3 +104,27 @@ class oqs:
 
         self.__driving_hamiltonians = hamiltonias
         self.__driving_functions = functions
+
+    def init_dissipators(self, dissipators):
+        """
+        Initialization of Open Quantum System (OQS) with dissipators (list of CSR matrices).
+
+        :param dissipators:
+            List of dissipators (CSR format).
+        :type dissipators: list
+        """
+        if not isinstance(dissipators, list):
+            raise TypeError('dissipators must be list of csr_matrix.')
+
+        if not dissipators:
+            raise ValueError('Quantum system is OPEN. There must be at least one dissipator.')
+        else:
+            if len(dissipators) != self.__num_dissipators:
+                raise ValueError('Wrong number of dissipators.')
+            if not all(isinstance(x, csr_matrix) for x in dissipators):
+                raise TypeError('dissipators must be list of csr_matrix.')
+            for d in dissipators:
+                if d.shape[0] != self.__sys_size or d.shape[1] != self.__sys_size:
+                    raise ValueError('Incorrect size of dissipators.')
+
+        self.__dissipators = dissipators

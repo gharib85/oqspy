@@ -81,3 +81,25 @@ class TestOQS(unittest.TestCase):
             sys.init_driving([h_2], [driving_1p, driving_1p])
         with self.assertRaises(ValueError):
             sys.init_driving([h_2], [driving_2p, driving_2p])
+
+    def test_oqs_init_dissipators(self):
+        sys = oqs(10, 1, 1)
+
+        rows = np.array([0, 0, 1, 2, 2, 2])
+        cols = np.array([0, 2, 2, 0, 1, 2])
+        vals = np.array([1, 2, 3, 4, 5, 6])
+        d_1 = csr_matrix((vals, (rows, cols)), shape=(3, 3))
+        d_2 = csr_matrix((vals, (rows, cols)), shape=(10, 10))
+
+        with self.assertRaises(TypeError):
+            sys.init_dissipators('aaa')
+        with self.assertRaises(TypeError):
+            sys.init_dissipators(['aaa'])
+        with self.assertRaises(TypeError):
+            sys.init_dissipators(d_1)
+        with self.assertRaises(ValueError):
+            sys.init_dissipators([d_1])
+        with self.assertRaises(ValueError):
+            sys.init_dissipators([d_1, d_1])
+        with self.assertRaises(ValueError):
+            sys.init_dissipators([d_2, d_2])
