@@ -50,6 +50,7 @@ class oqs:
         self.__gammas = None
 
         self.__lindbladian = None
+        self.__driving_lindbladians = None
 
     def init_hamiltonian(self, hamiltonian):
         """
@@ -173,3 +174,23 @@ class oqs:
             self.__lindbladian += 0.5 * self.__gammas[diss_id] * (
                 2.0 * sparse.kron(eye, diss) * sparse.kron(tmp_1, eye) - sparse.kron(tmp_3, eye) - sparse.kron(eye, tmp_2)
             )
+
+    def __calc_driving_lindbladians(self):
+
+        if self.__num_driving_segments <= 0:
+            raise ValueError('num_driving_segments must be positive for calc_driving_lindbladian.')
+        if self.__driving_hamiltonians is None:
+            raise ValueError('driving_hamiltonians is not initialized.')
+        if self.__driving_functions is None:
+            raise ValueError('__driving_functions is not initialized.')
+
+        eye = sparse.eye(self.__sys_size, self.__sys_size, dtype=np.complex, format='csr')
+
+        self.__driving_lindbladians = []
+        for l_id in range(0, self.__num_driving_segments):
+
+            lindbladian = -1.0j * (
+                sparse.kron(eye, self.__driving_hamiltonians[l_id]) - sparse.kron(self.__driving_hamiltonians[l_id].transpose(copy=True), eye)
+            )
+
+            self.__driving_lindbladians.append(lindbladian)

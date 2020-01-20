@@ -258,3 +258,45 @@ class TestOQS(unittest.TestCase):
         l_actual = sys._oqs__lindbladian
         norm_diff = sps_mtx_norm(l_expected - l_actual)
         self.assertLess(norm_diff, 1.0e-14)
+
+    def test_calc_driving_lindbladians(self):
+        with self.assertRaises(ValueError):
+            sys_size = dimer_get_sys_size(self.dimer_1.num_particles)
+            sys = oqs(sys_size, 0, 1)
+            sys._oqs__calc_driving_lindbladians()
+
+        # Dimer: 1
+        sys_size = dimer_get_sys_size(self.dimer_1.num_particles)
+        hamiltonians = dimer_get_driving_hamiltonias(self.dimer_1.num_particles)
+        functions = dimer_get_driving_functions(
+            self.dimer_1.drv_type,
+            self.dimer_1.drv_ampl,
+            self.dimer_1.drv_freq,
+            self.dimer_1.drv_phas
+        )
+        fn = self.dimer_1.get_path() + 'lindbladian_drv_mtx' + self.dimer_1.get_suffix()
+        l_expected = load_sparse_matrix(fn, self.dimer_1.sys_size * self.dimer_1.sys_size)
+        sys = oqs(sys_size, 1, 1)
+        sys.init_driving(hamiltonians, functions)
+        sys._oqs__calc_driving_lindbladians()
+        l_actual = sys._oqs__driving_lindbladians[0]
+        norm_diff = sps_mtx_norm(l_expected - l_actual)
+        self.assertLess(norm_diff, 1.0e-14)
+
+        # Dimer: 2
+        sys_size = dimer_get_sys_size(self.dimer_2.num_particles)
+        hamiltonians = dimer_get_driving_hamiltonias(self.dimer_2.num_particles)
+        functions = dimer_get_driving_functions(
+            self.dimer_2.drv_type,
+            self.dimer_2.drv_ampl,
+            self.dimer_2.drv_freq,
+            self.dimer_2.drv_phas
+        )
+        fn = self.dimer_2.get_path() + 'lindbladian_drv_mtx' + self.dimer_2.get_suffix()
+        l_expected = load_sparse_matrix(fn, self.dimer_2.sys_size * self.dimer_2.sys_size)
+        sys = oqs(sys_size, 1, 1)
+        sys.init_driving(hamiltonians, functions)
+        sys._oqs__calc_driving_lindbladians()
+        l_actual = sys._oqs__driving_lindbladians[0]
+        norm_diff = sps_mtx_norm(l_expected - l_actual)
+        self.assertLess(norm_diff, 1.0e-14)
