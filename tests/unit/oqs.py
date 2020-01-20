@@ -216,6 +216,11 @@ class TestOQS(unittest.TestCase):
         self.assertLess(norm_diff, 1.0e-14)
 
     def test_calc_lindbladian(self):
+        with self.assertRaises(ValueError):
+            sys_size = dimer_get_sys_size(self.dimer_1.num_particles)
+            sys = oqs(sys_size, 0, 1)
+            sys._oqs__calc_lindbladian()
+
         # Dimer: 1
         sys_size = dimer_get_sys_size(self.dimer_1.num_particles)
         hamiltonian = dimer_get_hamiltonian(
