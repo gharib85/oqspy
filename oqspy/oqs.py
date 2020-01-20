@@ -1,6 +1,7 @@
 from scipy.sparse import csr_matrix
 import types
 from inspect import signature
+import numpy as np
 
 
 class oqs:
@@ -45,6 +46,7 @@ class oqs:
         self.__driving_hamiltonians = None
         self.__driving_functions = None
         self.__dissipators = None
+        self.__gammas = None
 
     def init_hamiltonian(self, hamiltonian):
         """
@@ -74,9 +76,6 @@ class oqs:
         """
         if not isinstance(hamiltonias, list):
             raise TypeError('Driving hamiltonians must be list of csr_matrix.')
-        if not isinstance(functions, list):
-            raise TypeError('Driving functions must be list of functions.')
-
         if not hamiltonias:
             if self.__num_driving_segments > 0:
                 raise ValueError('Wrong number of driving hamiltonians.')
@@ -89,6 +88,8 @@ class oqs:
                 if h.shape[0] != self.__sys_size or h.shape[1] != self.__sys_size:
                     raise ValueError('Incorrect size of driving hamiltonians.')
 
+        if not isinstance(functions, list):
+            raise TypeError('Driving functions must be list of functions.')
         if not functions:
             if self.__num_driving_segments > 0:
                 raise ValueError('Wrong number of driving functions.')
@@ -105,17 +106,20 @@ class oqs:
         self.__driving_hamiltonians = hamiltonias
         self.__driving_functions = functions
 
-    def init_dissipators(self, dissipators):
+    def init_dissipation(self, dissipators, gammas):
         """
-        Initialization of Open Quantum System (OQS) with dissipators (list of CSR matrices).
+        Initialization of Open Quantum System (OQS) with dissipation.
 
         :param dissipators:
             List of dissipators (CSR format).
         :type dissipators: list
+
+        :param gammas:
+            List of dissipation rates.
+        :type gammas:  list
         """
         if not isinstance(dissipators, list):
             raise TypeError('dissipators must be list of csr_matrix.')
-
         if not dissipators:
             raise ValueError('Quantum system is OPEN. There must be at least one dissipator.')
         else:
@@ -127,4 +131,21 @@ class oqs:
                 if d.shape[0] != self.__sys_size or d.shape[1] != self.__sys_size:
                     raise ValueError('Incorrect size of dissipators.')
 
+        if not isinstance(gammas, list):
+            raise TypeError('Dissipation rates (gammas) must be list of float.')
+        if not gammas:
+            raise ValueError('Quantum system is OPEN. There must be at least one dissipation rate (gamma).')
+        else:
+            if len(gammas) != self.__num_dissipators:
+                raise ValueError('Wrong number of dissipation rates (gammas).')
+            if not all(isinstance(g, (np.floating, float)) for g in gammas):
+                raise TypeError('Dissipation rates (gammas) must be list of float.')
+            for g in gammas:
+                if g <= 0.0:
+                    raise ValueError('Dissipation rates (gammas) must be list of positive float.')
+
         self.__dissipators = dissipators
+        self.__gammas = gammas
+
+    def __init_lindbladian(self):
+        pass

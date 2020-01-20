@@ -82,7 +82,7 @@ class TestOQS(unittest.TestCase):
         with self.assertRaises(ValueError):
             sys.init_driving([h_2], [driving_2p, driving_2p])
 
-    def test_oqs_init_dissipators(self):
+    def test_oqs_init_dissipation(self):
         sys = oqs(10, 1, 1)
 
         rows = np.array([0, 0, 1, 2, 2, 2])
@@ -92,14 +92,27 @@ class TestOQS(unittest.TestCase):
         d_2 = csr_matrix((vals, (rows, cols)), shape=(10, 10))
 
         with self.assertRaises(TypeError):
-            sys.init_dissipators('aaa')
+            sys.init_dissipation('aaa', [0.01])
         with self.assertRaises(TypeError):
-            sys.init_dissipators(['aaa'])
+            sys.init_dissipation(['aaa'], [0.01])
         with self.assertRaises(TypeError):
-            sys.init_dissipators(d_1)
+            sys.init_dissipation(d_1, [0.01])
         with self.assertRaises(ValueError):
-            sys.init_dissipators([d_1])
+            sys.init_dissipation([d_1], [0.01])
         with self.assertRaises(ValueError):
-            sys.init_dissipators([d_1, d_1])
+            sys.init_dissipation([d_1, d_1], [0.01])
         with self.assertRaises(ValueError):
-            sys.init_dissipators([d_2, d_2])
+            sys.init_dissipation([d_2, d_2], [0.01])
+
+        with self.assertRaises(TypeError):
+            sys.init_dissipation([d_2], 'aaa')
+        with self.assertRaises(TypeError):
+            sys.init_dissipation([d_2], ['aaa'])
+        with self.assertRaises(TypeError):
+            sys.init_dissipation([d_2], 0.01)
+        with self.assertRaises(ValueError):
+            sys.init_dissipation([d_2], [-0.01])
+        with self.assertRaises(ValueError):
+            sys.init_dissipation([d_2], [-0.01, -0.01])
+        with self.assertRaises(ValueError):
+            sys.init_dissipation([d_2], [0.01, 0.01])
