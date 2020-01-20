@@ -1,4 +1,6 @@
 from scipy.sparse import csr_matrix
+import types
+from inspect import signature
 
 
 class oqs:
@@ -39,6 +41,10 @@ class oqs:
         self.__num_driving_segments = num_driving_segments
         self.__num_dissipators = num_dissipators
 
+        self.__hamiltonian = None
+        self.__driving_hamiltonians = None
+        self.__driving_functions = None
+
     def init_hamiltonian(self, hamiltonian):
         """
         Initialization of Open Quantum System (OQS) with Hamiltonian.
@@ -52,3 +58,48 @@ class oqs:
         if hamiltonian.shape[0] != self.__sys_size or hamiltonian.shape[1] != self.__sys_size:
             raise ValueError('Incorrect size of hamiltonian.')
         self.__hamiltonian = hamiltonian
+
+    def init_driving(self, hamiltonias, functions):
+        """
+        Initialization of Open Quantum System (OQS) with Hamiltonian.
+
+        :param hamiltonias:
+            List of driving Hamiltonians (CSR format).
+        :type hamiltonias: list
+
+        :param functions:
+            List of driving functions.
+        :type functions: list
+        """
+        if not isinstance(hamiltonias, list):
+            raise TypeError('Driving hamiltonians must be list of csr_matrix.')
+        if not isinstance(functions, list):
+            raise TypeError('Driving functions must be list of functions.')
+
+        if not hamiltonias:
+            if self.__num_driving_segments > 0:
+                raise ValueError('Wrong number of driving hamiltonians.')
+        else:
+            if len(hamiltonias) != self.__num_driving_segments:
+                raise ValueError('Wrong number of driving hamiltonians.')
+            if not all(isinstance(x, csr_matrix) for x in hamiltonias):
+                raise TypeError('Driving hamiltonians must be list of csr_matrix.')
+            for h in hamiltonias:
+                if h.shape[0] != self.__sys_size or h.shape[1] != self.__sys_size:
+                    raise ValueError('Incorrect size of driving hamiltonians.')
+
+        if not functions:
+            if self.__num_driving_segments > 0:
+                raise ValueError('Wrong number of driving functions.')
+        else:
+            if len(functions) != self.__num_driving_segments:
+                raise ValueError('Wrong number of driving functions.')
+            if not all(isinstance(x, types.FunctionType) for x in functions):
+                raise TypeError('Driving functions must be list of functions.')
+            for f in functions:
+                sig = signature(f)
+                if len(sig.parameters) != 1:
+                    raise ValueError('Driving functions must have only one input argument (time).')
+
+        self.__driving_hamiltonians = hamiltonias
+        self.__driving_functions = functions
