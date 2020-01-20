@@ -61,7 +61,7 @@ class oqs:
 
     def init_driving(self, hamiltonias, functions):
         """
-        Initialization of Open Quantum System (OQS) with Hamiltonian.
+        Initialization of Open Quantum System (OQS) with driving details.
 
         :param hamiltonias:
             List of driving Hamiltonians (CSR format).
