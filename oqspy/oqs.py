@@ -151,14 +151,16 @@ class oqs:
         self.__dissipators = dissipators
         self.__gammas = gammas
 
+    def ode_density_matrices(self):
+        self.__calc_lindbladian()
+        self.__calc_driving_lindbladians()
+
     def __calc_lindbladian(self):
 
         if self.__hamiltonian is None:
             raise ValueError('hamiltonian is not initialized.')
-        if self.__dissipators is None:
-            raise ValueError('dissipators are not initialized.')
-        if self.__gammas is None:
-            raise ValueError('gammas are not initialized.')
+        if self.__dissipators is None or self.__gammas is None:
+            raise ValueError('dissipaton is not initialized.')
 
         eye = sparse.eye(self.__sys_size, self.__sys_size, dtype=np.complex, format='csr')
 
@@ -179,10 +181,8 @@ class oqs:
 
         if self.__num_driving_segments <= 0:
             raise ValueError('num_driving_segments must be positive for calc_driving_lindbladian.')
-        if self.__driving_hamiltonians is None:
-            raise ValueError('driving_hamiltonians is not initialized.')
-        if self.__driving_functions is None:
-            raise ValueError('__driving_functions is not initialized.')
+        if self.__driving_hamiltonians is None or self.__driving_functions is None:
+            raise ValueError('driving is not initialized.')
 
         eye = sparse.eye(self.__sys_size, self.__sys_size, dtype=np.complex, format='csr')
 

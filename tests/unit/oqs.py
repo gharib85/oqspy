@@ -126,7 +126,7 @@ class TestOQS(unittest.TestCase):
         with self.assertRaises(ValueError):
             sys.init_driving([h_2], [driving_2p, driving_2p])
         with self.assertRaises(ValueError):
-            sys.init_driving([h_1], [])
+            sys.init_driving([h_2], [])
 
         # Dimer: 1
         fn = self.dimer_1.get_path() + 'hamiltonian_drv_mtx' + self.dimer_1.get_suffix()
