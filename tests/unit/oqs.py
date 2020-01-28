@@ -285,6 +285,11 @@ class TestOQS(unittest.TestCase):
             sys = oqs(sys_size, 0, 1)
             sys._oqs__calc_driving_lindbladians()
 
+        with self.assertRaises(ValueError):
+            sys_size = dimer_get_sys_size(self.dimer_1.num_particles)
+            sys = oqs(sys_size, 1, 1)
+            sys._oqs__calc_driving_lindbladians()
+
         # Dimer: 1
         sys_size = dimer_get_sys_size(self.dimer_1.num_particles)
         hamiltonians = dimer_get_driving_hamiltonias(self.dimer_1.num_particles)
