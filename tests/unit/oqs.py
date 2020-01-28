@@ -110,6 +110,8 @@ class TestOQS(unittest.TestCase):
             sys.init_driving([h_1, h_1], [driving_1p])
         with self.assertRaises(ValueError):
             sys.init_driving([h_2, h_2], [driving_1p])
+        with self.assertRaises(ValueError):
+            sys.init_driving([], [driving_1p])
 
         with self.assertRaises(TypeError):
             sys.init_driving([h_2], 'aaa')
@@ -123,6 +125,8 @@ class TestOQS(unittest.TestCase):
             sys.init_driving([h_2], [driving_1p, driving_1p])
         with self.assertRaises(ValueError):
             sys.init_driving([h_2], [driving_2p, driving_2p])
+        with self.assertRaises(ValueError):
+            sys.init_driving([h_1], [])
 
         # Dimer: 1
         fn = self.dimer_1.get_path() + 'hamiltonian_drv_mtx' + self.dimer_1.get_suffix()
@@ -179,6 +183,8 @@ class TestOQS(unittest.TestCase):
             sys.init_dissipation([d_1, d_1], [0.1])
         with self.assertRaises(ValueError):
             sys.init_dissipation([d_2, d_2], [0.1])
+        with self.assertRaises(ValueError):
+            sys.init_dissipation([], [0.1])
 
         with self.assertRaises(TypeError):
             sys.init_dissipation([d_2], 'aaa')
@@ -192,6 +198,8 @@ class TestOQS(unittest.TestCase):
             sys.init_dissipation([d_2], [-0.1, -0.1])
         with self.assertRaises(ValueError):
             sys.init_dissipation([d_2], [0.1, 0.1])
+        with self.assertRaises(ValueError):
+            sys.init_dissipation([d_2], [])
 
         # Dimer: 1
         fn = self.dimer_1.get_path() + 'diss_0_mtx' + self.dimer_1.get_suffix()
@@ -219,6 +227,18 @@ class TestOQS(unittest.TestCase):
         with self.assertRaises(ValueError):
             sys_size = dimer_get_sys_size(self.dimer_1.num_particles)
             sys = oqs(sys_size, 0, 1)
+            sys._oqs__calc_lindbladian()
+
+        with self.assertRaises(ValueError):
+            sys_size = dimer_get_sys_size(self.dimer_1.num_particles)
+            sys = oqs(sys_size, 0, 1)
+            hamiltonian = dimer_get_hamiltonian(
+                self.dimer_1.num_particles,
+                self.dimer_1.E,
+                self.dimer_1.U,
+                self.dimer_1.J
+            )
+            sys.init_hamiltonian(hamiltonian)
             sys._oqs__calc_lindbladian()
 
         # Dimer: 1

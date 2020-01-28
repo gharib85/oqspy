@@ -66,29 +66,29 @@ class oqs:
             raise ValueError('Incorrect size of hamiltonian.')
         self.__hamiltonian = hamiltonian
 
-    def init_driving(self, hamiltonias, functions):
+    def init_driving(self, hamiltonians, functions):
         """
         Initialization of Open Quantum System (OQS) with driving details.
 
-        :param hamiltonias:
+        :param hamiltonians:
             List of driving Hamiltonians (CSR format).
-        :type hamiltonias: list
+        :type hamiltonians: list
 
         :param functions:
             List of driving functions.
         :type functions: list
         """
-        if not isinstance(hamiltonias, list):
+        if not isinstance(hamiltonians, list):
             raise TypeError('Driving hamiltonians must be list of csr_matrix.')
-        if not hamiltonias:
+        if not hamiltonians:
             if self.__num_driving_segments > 0:
                 raise ValueError('Wrong number of driving hamiltonians.')
         else:
-            if len(hamiltonias) != self.__num_driving_segments:
+            if len(hamiltonians) != self.__num_driving_segments:
                 raise ValueError('Wrong number of driving hamiltonians.')
-            if not all(isinstance(x, csr_matrix) for x in hamiltonias):
+            if not all(isinstance(x, csr_matrix) for x in hamiltonians):
                 raise TypeError('Driving hamiltonians must be list of csr_matrix.')
-            for h in hamiltonias:
+            for h in hamiltonians:
                 if h.shape[0] != self.__sys_size or h.shape[1] != self.__sys_size:
                     raise ValueError('Incorrect size of driving hamiltonians.')
 
@@ -107,7 +107,7 @@ class oqs:
                 if len(sig.parameters) != 1:
                     raise ValueError('Driving functions must have only one input argument (time).')
 
-        self.__driving_hamiltonians = hamiltonias
+        self.__driving_hamiltonians = hamiltonians
         self.__driving_functions = functions
 
     def init_dissipation(self, dissipators, gammas):
